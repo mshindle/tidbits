@@ -7,9 +7,9 @@ import (
 	"os"
 	"time"
 
+	"github.com/mshindle/tidbits/dynamic"
+	"github.com/mshindle/tidbits/toy"
 	"github.com/urfave/cli"
-	"gitlab.dmdmedia.net/michael.shindle/tidbits/dynamic"
-	"gitlab.dmdmedia.net/michael.shindle/tidbits/toy"
 )
 
 func main() {
