@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/mshindle/tidbits/dynamic"
+	"github.com/mshindle/tidbits/retry"
 	"github.com/mshindle/tidbits/toy"
 	"github.com/urfave/cli"
 )
@@ -49,6 +50,16 @@ func main() {
 			Action: func(c *cli.Context) error {
 				fmt.Println("Running coins =>")
 				dynamic.Coins(c.Int("value"))
+				return nil
+			},
+		},
+		{
+			Name:    "breaker",
+			Aliases: []string{"b"},
+			Usage:   "run a circuit breaker example",
+			Action: func(c *cli.Context) error {
+				fmt.Println("Running breaker =>")
+				retry.RunBreaker()
 				return nil
 			},
 		},

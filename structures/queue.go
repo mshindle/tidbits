@@ -2,12 +2,6 @@ package structures
 
 import "sync"
 
-// snode is single linked list node
-type snode struct {
-	data interface{}
-	next *snode
-}
-
 // Queue is a collection designed for holding elements prior to processing.
 type Queue struct {
 	head  *snode
