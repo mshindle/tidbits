@@ -62,6 +62,10 @@ func (l *LinkedList) Shift() *Item {
 	return head
 }
 
+func (l *LinkedList) Head() *Item {
+	return l.head
+}
+
 func (l *LinkedList) Insert(before *Item, item *Item) *Item {
 	prev := before.Prev
 	before.Prev = item

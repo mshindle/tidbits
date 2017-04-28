@@ -8,12 +8,17 @@ import (
 	"time"
 
 	"github.com/mshindle/tidbits/dynamic"
+	"github.com/mshindle/tidbits/limit"
 	"github.com/mshindle/tidbits/retry"
 	"github.com/mshindle/tidbits/toy"
 	"github.com/urfave/cli"
+	"strings"
+	"errors"
 )
 
 func main() {
+	rand.Seed(time.Now().UnixNano())
+
 	app := cli.NewApp()
 	app.Name = "tidbits"
 	app.Usage = "execute samples of learning code"
@@ -60,6 +65,29 @@ func main() {
 			Action: func(c *cli.Context) error {
 				fmt.Println("Running breaker =>")
 				retry.RunBreaker()
+				return nil
+			},
+		},
+		{
+			Name:    "limit",
+			Aliases: []string{"l"},
+			Usage:   "run a request rate limiter example",
+			Action: func(c *cli.Context) error {
+				fmt.Println("Running limiter =>")
+				limit.RunRequest()
+				return nil
+			},
+		},
+		{
+			Name:    "oddword",
+			Aliases: []string{"o"},
+			Usage:   "parse a string of words - reversing the odd numbered words",
+			Action: func(c *cli.Context) error {
+				text := strings.Join(c.Args()," ")
+				if !strings.HasSuffix(text,".") {
+					return errors.New("string must terminate with a `.`")
+				}
+				toy.Oddword(text)
 				return nil
 			},
 		},
