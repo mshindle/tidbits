@@ -4,10 +4,6 @@ import (
 	"encoding/json"
 	"net/http"
 	"os"
-
-	"log"
-
-	"github.com/hashicorp/go-retryablehttp"
 )
 
 type Book struct {
@@ -31,17 +27,7 @@ func listenAndServe(addr string, statusCode int, book *Book) {
 	http.ListenAndServe(addr, mux)
 }
 
-type breaker struct {
-	scheme string
-	hosts  []string
-}
-
-func (b *breaker) RequestHook(l *log.Logger, req *http.Request, retry int) {
-	req.URL.Scheme = b.scheme
-	req.URL.Host = b.hosts[retry]
-}
-
-func RunBreaker() {
+func RunBreaker(hosts ...string) {
 	mobyDick := &Book{Id: 1, Title: "Moby Dick", Author: "Herman Melville"}
 
 	// set up the bad server
@@ -50,10 +36,7 @@ func RunBreaker() {
 	go listenAndServe(":8081", http.StatusOK, mobyDick)
 
 	// try and get a resource
-	b := &breaker{scheme: "http", hosts: []string{"localhost:8080", "localhost:8081"}}
-	client := retryablehttp.NewClient()
-	client.RequestLogHook = b.RequestHook
-	client.RetryMax = len(b.hosts) - 1
+	client := NewClient(hosts...)
 
 	resp, err := client.Get("/1")
 	if err != nil {

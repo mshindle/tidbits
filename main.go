@@ -60,12 +60,13 @@ func main() {
 			},
 		},
 		{
-			Name:    "breaker",
-			Aliases: []string{"b"},
-			Usage:   "run a circuit breaker example",
+			Name:      "breaker",
+			Aliases:   []string{"b"},
+			Usage:     "run a circuit breaker example",
+			ArgsUsage: "host1 [host2...]",
 			Action: func(c *cli.Context) error {
 				fmt.Println("Running breaker =>")
-				retry.RunBreaker()
+				retry.RunBreaker(c.Args()...)
 				return nil
 			},
 		},
