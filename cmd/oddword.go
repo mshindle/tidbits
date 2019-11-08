@@ -17,9 +17,9 @@ package cmd
 import (
 	"strings"
 
-	"github.com/mshindle/tidbits/toy"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
+	"gitlab.com/mshindle/tidbits/toy"
 )
 
 // oddwordCmd represents the oddword command

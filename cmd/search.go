@@ -18,8 +18,8 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/mshindle/tidbits/toy"
 	"github.com/spf13/cobra"
+	"gitlab.com/mshindle/tidbits/toy"
 )
 
 // searchCmd represents the search command

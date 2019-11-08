@@ -15,9 +15,9 @@
 package cmd
 
 import (
-	"github.com/mshindle/tidbits/dynamic"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
+	"gitlab.com/mshindle/tidbits/dynamic"
 )
 
 // coins value to calculate

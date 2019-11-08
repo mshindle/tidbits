@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"unicode"
 
-	"github.com/mshindle/tidbits/structures"
+	"gitlab.com/mshindle/tidbits/structures"
 )
 
 // Oddword prints out the text with each oddword reversed. From the

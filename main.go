@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/mshindle/tidbits/cmd"
+	"gitlab.com/mshindle/tidbits/cmd"
 )
 
 func main() {
