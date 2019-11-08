@@ -9,14 +9,19 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var verboseFlag bool
+
 // RootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "tidbits",
 	Short: "Run sample apps built for self education",
-	Long: `Collection of sample applications and code
-snippets to enable me to learn a few things.
+	Long: `
+Collection of sample applications and code snippets to enable me to learn a few things.
 `,
 	PersistentPreRun: func(cmd *cobra.Command, args []string) {
+		if verboseFlag {
+			logrus.SetLevel(logrus.DebugLevel)
+		}
 	},
 }
 
@@ -30,6 +35,8 @@ func Execute() {
 
 func init() {
 	rand.Seed(time.Now().UnixNano())
-	// globally set logging parameters
 	logrus.SetOutput(os.Stdout)
+	logrus.SetLevel(logrus.InfoLevel)
+
+	rootCmd.PersistentFlags().BoolVarP(&verboseFlag, "verbose", "v", false, "turn on debug messages")
 }

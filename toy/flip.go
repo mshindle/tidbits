@@ -21,7 +21,6 @@ func nextPowerOf2(n uint) uint {
 		logrus.WithFields(logrus.Fields{"k": k, "count": count}).Debug("iterating to next power of 2")
 		count += 1
 	}
-	logrus.WithField("nextPower2", 1<<count).Debug("next power number calculated")
 	return 1 << count
 }
 
@@ -38,23 +37,24 @@ func RandRange(n uint) uint {
 	var r = ^uint(0)
 
 	// figure out min # of bits to describe numbers
-	var k uint
+	var minBits uint
 	m := nextPowerOf2(n)
+	logrus.WithField("nextPower2", m).Info("next power number calculated")
 	for p := m; p != 0; p >>= 1 {
-		k += 1
+		minBits += 1
 	}
-	logrus.WithField("k", k).Info("number of bits to set")
+	logrus.WithField("minBits", minBits).Info("number of bits to set")
 
 	// calculate
 	for r >= n {
 		var generated, i uint
-		for i = 0; i < k-1; i++ {
+		for i = 0; i < minBits-1; i++ {
 			if flip() {
 				generated |= 1 << i
-				logrus.WithField("generated", generated).Info("flip true")
+				logrus.WithField("generated", generated).Debug("flip true")
 
 			} else {
-				logrus.WithField("generated", generated).Info("flip false")
+				logrus.WithField("generated", generated).Debug("flip false")
 			}
 		}
 		r = generated

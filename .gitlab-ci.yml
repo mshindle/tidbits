@@ -1,0 +1,16 @@
+image:
+  name: "golang:1.12.13-buster"
+
+stages:
+  - build
+  - test
+
+compile:
+  stage: "build"
+  script:
+    - go build
+
+validate:
+  stage: "test"
+  script:
+    - go test ./...

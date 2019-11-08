@@ -2,11 +2,6 @@ package structures
 
 import "testing"
 
-type itemString struct {
-	Item
-	value string
-}
-
 var listElements = []string{"alpha", "bravo", "charlie"}
 
 func listFromStrings(lstr []string) *LinkedList {
