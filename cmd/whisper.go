@@ -26,7 +26,8 @@ var whisperCmd = &cobra.Command{
 	Short: "play whisper adding 1 to every number passed",
 	Run: func(cmd *cobra.Command, args []string) {
 		logrus.Info("Running whisper")
-		toy.Whisper()
+		sum := toy.Whisper(100000)
+		logrus.WithField("sum", sum).Info("whisper addition")
 	},
 }
 
