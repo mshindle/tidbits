@@ -20,17 +20,21 @@ import (
 	"gitlab.com/mshindle/tidbits/toy"
 )
 
+var n int
+
 // whisperCmd represents the whisper command
 var whisperCmd = &cobra.Command{
 	Use:   "whisper",
 	Short: "play whisper adding 1 to every number passed",
 	Run: func(cmd *cobra.Command, args []string) {
 		logrus.Info("Running whisper")
-		sum := toy.Whisper(100000)
+		sum := toy.Whisper(n)
 		logrus.WithField("sum", sum).Info("whisper addition")
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(whisperCmd)
+	whisperCmd.Flags().IntVarP(&n, "numRoutines", "n", 100000, "number of goroutines to create")
+
 }

@@ -23,7 +23,7 @@ import (
 	"gitlab.com/mshindle/tidbits/toy"
 )
 
-var n uint64
+var nRange uint64
 
 // randomCmd represents the random command
 var randomCmd = &cobra.Command{
@@ -38,14 +38,14 @@ probability of each number occurring.`,
 		if err != nil {
 			return err
 		}
-		n, err = strconv.ParseUint(args[0], 10, 64)
-		if err != nil || n < 1 {
+		nRange, err = strconv.ParseUint(args[0], 10, 64)
+		if err != nil || nRange < 1 {
 			return fmt.Errorf("argument must be an integer greater than 0, received %s", args[0])
 		}
 		return nil
 	},
 	Run: func(cmd *cobra.Command, args []string) {
-		r := toy.RandRange(uint(n))
+		r := toy.RandRange(uint(nRange))
 		fmt.Printf("random number generated: %d", r)
 	},
 }
