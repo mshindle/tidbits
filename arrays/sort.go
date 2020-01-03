@@ -1,0 +1,22 @@
+package arrays
+
+// SubarraySort returns starting and ending indices of arr
+// in order to make all of arr sorted
+func SubarraySort(arr []int) []int {
+	indices := []int{-1, -1}
+	for i, max := 1, arr[0]; i < len(arr); i++ {
+		if max > arr[i] {
+			for k := 0; k < i; k++ {
+				if arr[k] > arr[i] {
+					if indices[0] == -1 || indices[0] > k {
+						indices[0] = k
+					}
+					indices[1] = i
+				}
+			}
+		} else {
+			max = arr[i]
+		}
+	}
+	return indices
+}

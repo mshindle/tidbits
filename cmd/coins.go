@@ -32,8 +32,11 @@ of coins needed to fulfill a cents value.
 
 The coin denominations are 1, 5, 10, 25, and 100.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		logrus.WithField("value", value).Info("running coins")
-		dynamic.Coins(value)
+		d := []int{1, 5, 10, 25, 100}
+		logger := logrus.WithField("value", value).WithField("d", d)
+		logger.Info("running coins")
+		nc := dynamic.Coins(value, d)
+		logger.WithField("num_coins", nc).Info("number of coins")
 	},
 }
 
