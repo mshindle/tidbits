@@ -15,7 +15,7 @@
 package cmd
 
 import (
-	"github.com/sirupsen/logrus"
+	"github.com/apex/log"
 	"github.com/spf13/cobra"
 	"gitlab.com/mshindle/tidbits/toy"
 )
@@ -27,14 +27,13 @@ var whisperCmd = &cobra.Command{
 	Use:   "whisper",
 	Short: "play whisper adding 1 to every number passed",
 	Run: func(cmd *cobra.Command, args []string) {
-		logrus.Info("Running whisper")
+		log.Info("Running whisper")
 		sum := toy.Whisper(n)
-		logrus.WithField("sum", sum).Info("whisper addition")
+		log.WithField("sum", sum).Info("whisper addition")
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(whisperCmd)
 	whisperCmd.Flags().IntVarP(&n, "numRoutines", "n", 100000, "number of goroutines to create")
-
 }

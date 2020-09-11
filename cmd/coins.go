@@ -15,7 +15,7 @@
 package cmd
 
 import (
-	"github.com/sirupsen/logrus"
+	"github.com/apex/log"
 	"github.com/spf13/cobra"
 	"gitlab.com/mshindle/tidbits/dynamic"
 )
@@ -33,7 +33,7 @@ of coins needed to fulfill a cents value.
 The coin denominations are 1, 5, 10, 25, and 100.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		d := []int{1, 5, 10, 25, 100}
-		logger := logrus.WithField("value", value).WithField("d", d)
+		logger := log.WithField("value", value).WithField("d", d)
 		logger.Info("running coins")
 		nc := dynamic.Coins(value, d)
 		logger.WithField("num_coins", nc).Info("number of coins")

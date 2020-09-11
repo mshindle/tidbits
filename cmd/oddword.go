@@ -17,7 +17,7 @@ package cmd
 import (
 	"strings"
 
-	"github.com/sirupsen/logrus"
+	"github.com/apex/log"
 	"github.com/spf13/cobra"
 	"gitlab.com/mshindle/tidbits/toy"
 )
@@ -42,7 +42,7 @@ becomes
 	Run: func(cmd *cobra.Command, args []string) {
 		text := strings.Join(args, " ")
 		if !strings.HasSuffix(text, ".") {
-			logrus.Fatal("string must terminate with a `.`")
+			log.Fatal("string must terminate with a `.`")
 		}
 		toy.Oddword(text)
 	},
