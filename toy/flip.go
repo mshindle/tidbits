@@ -3,7 +3,7 @@ package toy
 import (
 	"math/rand"
 
-	"github.com/sirupsen/logrus"
+	"github.com/apex/log"
 )
 
 // given a function flip() which simulates a coin-flip and
@@ -18,7 +18,7 @@ func nextPowerOf2(n uint) uint {
 
 	var count uint
 	for k := n; k != 0; k >>= 1 {
-		logrus.WithFields(logrus.Fields{"k": k, "count": count}).Debug("iterating to next power of 2")
+		log.WithFields(log.Fields{"k": k, "count": count}).Debug("iterating to next power of 2")
 		count += 1
 	}
 	return 1 << count
@@ -39,11 +39,11 @@ func RandRange(n uint) uint {
 	// figure out min # of bits to describe numbers
 	var minBits uint
 	m := nextPowerOf2(n)
-	logrus.WithField("nextPower2", m).Info("next power number calculated")
+	log.WithField("nextPower2", m).Info("next power number calculated")
 	for p := m; p != 0; p >>= 1 {
 		minBits += 1
 	}
-	logrus.WithField("minBits", minBits).Info("number of bits to set")
+	log.WithField("minBits", minBits).Info("number of bits to set")
 
 	// calculate
 	for r >= n {
@@ -51,14 +51,14 @@ func RandRange(n uint) uint {
 		for i = 0; i < minBits-1; i++ {
 			if flip() {
 				generated |= 1 << i
-				logrus.WithField("generated", generated).Debug("flip true")
+				log.WithField("generated", generated).Debug("flip true")
 
 			} else {
-				logrus.WithField("generated", generated).Debug("flip false")
+				log.WithField("generated", generated).Debug("flip false")
 			}
 		}
 		r = generated
-		logrus.WithField("r", r).Info("number generated")
+		log.WithField("r", r).Info("number generated")
 	}
 
 	return r

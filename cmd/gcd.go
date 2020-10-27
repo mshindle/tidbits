@@ -15,8 +15,9 @@
 package cmd
 
 import (
-	"github.com/sirupsen/logrus"
+	"github.com/apex/log"
 	"github.com/spf13/cobra"
+
 	"gitlab.com/mshindle/tidbits/toy"
 )
 
@@ -27,13 +28,13 @@ var gcdCmd = &cobra.Command{
 	Short:   "return the greatest common denominator between two numbers",
 	Long:    `return the greatest common denominator between two numbers`,
 	Run: func(cmd *cobra.Command, args []string) {
-		logrus.Info("Running gcd => 12 15")
+		log.Info("Running gcd => 12 15")
 		gcd := toy.GCD(12, 15)
-		logrus.WithField("gcd", gcd).Info("calculated")
+		log.WithField("gcd", gcd).Info("calculated")
 
-		logrus.Info("Running lcm => 12 15")
+		log.Info("Running lcm => 12 15")
 		lcm := toy.LCM(12, 15)
-		logrus.WithField("lcm", lcm).Info("calculated")
+		log.WithField("lcm", lcm).Info("calculated")
 	},
 }
 

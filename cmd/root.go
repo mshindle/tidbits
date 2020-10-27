@@ -2,10 +2,9 @@ package cmd
 
 import (
 	"math/rand"
-	"os"
 	"time"
 
-	"github.com/sirupsen/logrus"
+	"github.com/apex/log"
 	"github.com/spf13/cobra"
 )
 
@@ -20,7 +19,7 @@ Collection of sample applications and code snippets to enable me to learn a few 
 `,
 	PersistentPreRun: func(cmd *cobra.Command, args []string) {
 		if verboseFlag {
-			logrus.SetLevel(logrus.DebugLevel)
+			log.SetLevel(log.DebugLevel)
 		}
 	},
 }
@@ -29,14 +28,13 @@ Collection of sample applications and code snippets to enable me to learn a few 
 // This is called by main.main(). It only needs to happen once to the rootCmd.
 func Execute() {
 	if err := rootCmd.Execute(); err != nil {
-		logrus.WithError(err).Fatal("exiting application")
+		log.WithError(err).Fatal("exiting application")
 	}
 }
 
 func init() {
 	rand.Seed(time.Now().UnixNano())
-	logrus.SetOutput(os.Stdout)
-	logrus.SetLevel(logrus.InfoLevel)
+	log.SetLevel(log.InfoLevel)
 
 	rootCmd.PersistentFlags().BoolVarP(&verboseFlag, "verbose", "v", false, "turn on debug messages")
 }

@@ -1,6 +1,8 @@
 package rect
 
-import "github.com/sirupsen/logrus"
+import (
+	"github.com/apex/log"
+)
 
 type Point struct {
 	X int
@@ -26,8 +28,8 @@ func CalcNumRectangles(grid Grid) int {
 				p := pair{pt.Y, ptAbove.Y}
 				ans = ans + pairCount[p]
 				pairCount[p]++
-				logrus.
-					WithFields(logrus.Fields{"pt": pt, "p": p, "ans": ans, "pairCount": pairCount[p]}).
+				log.
+					WithFields(log.Fields{"pt": pt, "p": p, "ans": ans, "pairCount": pairCount[p]}).
 					Debug("current state")
 			}
 		}
