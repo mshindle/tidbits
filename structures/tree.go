@@ -4,12 +4,9 @@ package structures
 type TraversalType int
 
 const (
-	// PreOrder traversal
 	PreOrder TraversalType = 1 << iota
-	// InOrder traversal
-	InOrder TraversalType = 1 << iota
-	// PostOrder traversal
-	PostOrder TraversalType = 1 << iota
+	InOrder
+	PostOrder
 )
 
 // Tree is a binary tree
@@ -37,12 +34,12 @@ func (tr *Tree) Insert(nd *Node) {
 
 // Traverse moves across the tree executing visit on each node as determined by TraversalType
 func (tr *Tree) Traverse(visit Visit, t TraversalType) {
-	switch {
-	case t&PreOrder == PreOrder:
+	switch t {
+	case PreOrder:
 		tr.Root.TraversePre(visit)
-	case t&InOrder == InOrder:
+	case InOrder:
 		tr.Root.TraverseIn(visit)
-	case t&PostOrder == InOrder:
+	case PostOrder:
 		tr.Root.TraversePost(visit)
 	}
 

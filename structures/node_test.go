@@ -11,11 +11,11 @@ func (a TestInt) CompareTo(o Comparable) int {
 	b := o.(TestInt)
 	if a < b {
 		return -1
-	} else if a == b {
-		return 0
-	} else {
-		return 1
 	}
+	if a == b {
+		return 0
+	}
+	return 1
 }
 
 type TestString string
@@ -24,11 +24,11 @@ func (a TestString) CompareTo(o Comparable) int {
 	b := o.(TestString)
 	if a < b {
 		return -1
-	} else if a == b {
-		return 0
-	} else {
-		return 1
 	}
+	if a == b {
+		return 0
+	}
+	return 1
 }
 
 var testCases = []struct {
