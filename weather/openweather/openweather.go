@@ -7,6 +7,7 @@ import (
 	"net/http"
 
 	"github.com/apex/log"
+
 	"gitlab.com/mshindle/tidbits/weather"
 )
 
