@@ -1,5 +1,5 @@
 image:
-  name: "mshindle/golang-extra:1.17.5"
+  name: "mshindle/golang-extra:1.17.8"
 
 stages:
   - build

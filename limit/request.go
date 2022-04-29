@@ -2,10 +2,10 @@ package limit
 
 import (
 	"fmt"
-
 	"sync"
 
 	"github.com/go-redis/redis"
+	"github.com/mshindle/ratelimit"
 )
 
 func RunRequest() {
@@ -18,7 +18,7 @@ func RunRequest() {
 	fmt.Println(pong, err)
 
 	var wg sync.WaitGroup
-	//rr := &ratelimit.RequestRate{ReplenishRate: 2, Capacity: 2, Client: client}
+	_ = &ratelimit.RequestRate{ReplenishRate: 2, Capacity: 2, Client: client}
 
 	for x := 0; x < 4; x++ {
 		//initRequest(x, &wg, rr)
