@@ -1,7 +1,7 @@
 package arrays
 
 // SubarraySort returns starting and ending indices of arr
-// in order to make all of arr sorted
+// in order to make all the array sorted
 func SubarraySort(arr []int) []int {
 	indices := []int{-1, -1}
 	for i, max := 1, arr[0]; i < len(arr); i++ {

@@ -1,0 +1,32 @@
+version: "3.8"
+services:
+  leader-01:
+    container_name: leader-01
+    image: mshindle/tidbits:latest
+    ports:
+      - "6001:6001"
+    environment:
+      - RANK=1
+      - NODES=3
+    command:
+      - leader
+  leader-02:
+    container_name: leader-02
+    image: mshindle/tidbits:latest
+    ports:
+      - "6002:6002"
+    environment:
+      - RANK=2
+      - NODES=3
+    command:
+      - leader
+  leader-03:
+    container_name: leader-03
+    image: mshindle/tidbits:latest
+    ports:
+      - "6003:6003"
+    environment:
+      - RANK=3
+      - NODES=3
+    command:
+      - leader
