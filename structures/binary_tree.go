@@ -21,18 +21,6 @@ func NewIntTree(k int) *IntTree {
 	return t
 }
 
-func insert(t *IntTree, v int) *IntTree {
-	if t == nil {
-		return &IntTree{nil, v, nil}
-	}
-	if v < t.Value {
-		t.Left = insert(t.Left, v)
-	} else {
-		t.Right = insert(t.Right, v)
-	}
-	return t
-}
-
 func (t *IntTree) String() string {
 	if t == nil {
 		return "()"
@@ -46,6 +34,28 @@ func (t *IntTree) String() string {
 		s += " " + t.Right.String()
 	}
 	return "(" + s + ")"
+}
+
+func insert(t *IntTree, v int) *IntTree {
+	if t == nil {
+		return &IntTree{nil, v, nil}
+	}
+	if v < t.Value {
+		t.Left = insert(t.Left, v)
+	} else {
+		t.Right = insert(t.Right, v)
+	}
+	return t
+}
+
+func Invert(t *IntTree) {
+	if t == nil {
+		return
+	}
+
+	Invert(t.Left)
+	Invert(t.Right)
+	t.Left, t.Right = t.Right, t.Left
 }
 
 // Walk walks the tree t sending all values

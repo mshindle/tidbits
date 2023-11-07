@@ -1,6 +1,9 @@
 package structures
 
-import "testing"
+import (
+	"fmt"
+	"testing"
+)
 
 func TestSame(t *testing.T) {
 	type args struct {
@@ -34,6 +37,30 @@ func TestSame(t *testing.T) {
 			if got := Same(tt.args.t1, tt.args.t2); got != tt.want {
 				t.Errorf("Same() = %v, want %v", got, tt.want)
 			}
+		})
+	}
+}
+
+func TestInvert(t *testing.T) {
+	type args struct {
+		t *IntTree
+	}
+	tests := []struct {
+		name string
+		args args
+	}{
+		{
+			name: "invert a small tree",
+			args: args{
+				t: NewIntTree(3),
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			fmt.Println(tt.args.t.String())
+			Invert(tt.args.t)
+			fmt.Println(tt.args.t.String())
 		})
 	}
 }
