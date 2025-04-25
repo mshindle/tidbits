@@ -22,18 +22,18 @@ func (d *Duck) WithSpeaker(s Speaker) *Duck {
 	return d
 }
 
-func (d Duck) Display() {
+func (d *Duck) Display() {
 	fmt.Printf("I am a duck - a %s to be precise.\n", d.Name)
 }
 
-func (d Duck) Fly() {
+func (d *Duck) Fly() {
 	d.Flyer.Fly()
 }
 
-func (d Duck) Quack() {
+func (d *Duck) Quack() {
 	d.Speaker.Speak()
 }
 
-func (d Duck) Swim() {
+func (d *Duck) Swim() {
 	fmt.Printf("All ducks can swim - including me a %s\n", d.Name)
 }

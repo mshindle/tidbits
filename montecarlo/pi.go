@@ -4,7 +4,6 @@ import (
 	"math"
 	"math/rand"
 	"sync"
-	"time"
 
 	"github.com/apex/log"
 )
@@ -30,7 +29,6 @@ type PI struct {
 }
 
 func NewPI(points int64, numWorkers int) *PI {
-	rand.Seed(time.Now().UnixNano())
 	p := &PI{
 		Points:     points,
 		numWorkers: numWorkers,
@@ -53,8 +51,8 @@ func (p *PI) Compute() error {
 
 	log.WithFields(log.Fields{
 		"inCircle": p.InCircle,
-		"total": p.TotalPoints,
-		"pi": p.Value,
+		"total":    p.TotalPoints,
+		"pi":       p.Value,
 	}).Info("pi calculated")
 	return nil
 }
