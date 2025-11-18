@@ -5,6 +5,7 @@ go 1.19
 require (
 	github.com/apex/log v1.9.0
 	github.com/go-redis/redis/v8 v8.11.5
+	github.com/google/uuid v1.1.2
 	github.com/hashicorp/go-retryablehttp v0.7.4
 	github.com/mitchellh/go-homedir v1.1.0
 	github.com/mshindle/ratelimit v0.0.1

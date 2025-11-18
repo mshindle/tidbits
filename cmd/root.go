@@ -1,9 +1,7 @@
 package cmd
 
 import (
-	"math/rand"
 	"os"
-	"time"
 
 	"github.com/apex/log"
 	"github.com/mitchellh/go-homedir"
@@ -37,7 +35,6 @@ func Execute() {
 }
 
 func init() {
-	rand.Seed(time.Now().UnixNano())
 	log.SetLevel(log.InfoLevel)
 	cobra.OnInitialize(initConfig)
 
