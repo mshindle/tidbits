@@ -4,8 +4,8 @@ package arrays
 // in order to make all the array sorted
 func SubarraySort(arr []int) []int {
 	indices := []int{-1, -1}
-	for i, max := 1, arr[0]; i < len(arr); i++ {
-		if max > arr[i] {
+	for i, mx := 1, arr[0]; i < len(arr); i++ {
+		if mx > arr[i] {
 			for k := 0; k < i; k++ {
 				if arr[k] > arr[i] {
 					if indices[0] == -1 || indices[0] > k {
@@ -15,7 +15,7 @@ func SubarraySort(arr []int) []int {
 				}
 			}
 		} else {
-			max = arr[i]
+			mx = arr[i]
 		}
 	}
 	return indices
