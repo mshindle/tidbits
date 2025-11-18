@@ -11,9 +11,10 @@ import (
 	"sync"
 	"syscall"
 	"time"
+
+	"github.com/apex/log"
+	"golang.org/x/sync/errgroup"
 )
-import "github.com/apex/log"
-import "golang.org/x/sync/errgroup"
 
 var client *http.Client
 var host string = "localhost:8080"
