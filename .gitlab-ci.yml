@@ -1,11 +1,17 @@
-image:
-  name: "mshindle/golang-extra:latest"
-
 stages:
   - build
+  - test
+
+default:
+  image: "mshindle/golang-extra:latest"
 
 compile:
   stage: "build"
   script:
-    - go build
+    - go mod download
+    - go build main.go
+
+test-all:
+  stage: "test"
+  script:
     - go test ./...

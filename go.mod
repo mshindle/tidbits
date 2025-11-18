@@ -5,13 +5,14 @@ go 1.25
 require (
 	github.com/apex/log v1.9.0
 	github.com/go-redis/redis/v8 v8.11.5
+	github.com/google/uuid v1.6.0
 	github.com/hashicorp/go-retryablehttp v0.7.8
 	github.com/mitchellh/go-homedir v1.1.0
 	github.com/mshindle/ratelimit v0.0.1
 	github.com/spf13/cobra v1.10.1
 	github.com/spf13/viper v1.21.0
 	github.com/stretchr/testify v1.11.1
-	golang.org/x/sync v0.17.0
+	golang.org/x/sync v0.18.0
 )
 
 require (
