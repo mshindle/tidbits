@@ -2,7 +2,9 @@ package outbox
 
 import (
 	"database/sql"
-	"log"
+	"errors"
+
+	"github.com/apex/log"
 )
 
 // CreateUsersTableSQL contains the SQL statement to create a users table
@@ -48,8 +50,7 @@ CREATE INDEX IF NOT EXISTS idx_outbox_events_processed_at ON outbox_events (proc
 `
 
 func handleRollback(tx *sql.Tx) {
-	err := tx.Rollback()
-	if err != nil {
-		log.Fatalf("Error rolling back transaction: %s", err)
+	if rbe := tx.Rollback(); rbe != nil && !errors.Is(rbe, sql.ErrTxDone) {
+		log.WithError(rbe).Fatal("rolling back transaction failed")
 	}
 }

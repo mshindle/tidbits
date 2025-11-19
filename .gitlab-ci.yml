@@ -1,17 +1,25 @@
 stages:
-  - build
   - test
+  - build
 
 default:
   image: "mshindle/golang-extra:latest"
 
-compile:
-  stage: "build"
-  script:
-    - go mod download
-    - go build main.go
-
 test-all:
   stage: "test"
   script:
-    - go test ./...
+    - echo "running tests..."
+    - go mod tidy
+    - go test -v ./...
+
+compile:
+  stage: "build"
+  script:
+    - echo "building application..."
+    - CGO_ENABLED=1 go build -o tidbits main.go
+  artifacts:
+    paths:
+      - tidbits # Store the built executable as an artifact
+    expire_in: 1 week
+
+
