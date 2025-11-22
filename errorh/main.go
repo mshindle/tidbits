@@ -1,3 +1,6 @@
+// Package errorh maintains toy samples for showing how to do better error handling in golang.
+// See the following stackademic article for more detail:
+// https://blog.stackademic.com/go-error-handling-patterns-every-developer-should-know-933de7cf1c7c
 package errorh
 
 import (
