@@ -1,4 +1,4 @@
-package structures
+package cache
 
 type inode struct {
 	key   string
