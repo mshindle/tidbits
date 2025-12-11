@@ -10,6 +10,10 @@ type ErrorCollection struct {
 	Errors []error
 }
 
+func NewErrorCollection() *ErrorCollection {
+	return &ErrorCollection{Errors: make([]error, 0, 5)}
+}
+
 func (ec *ErrorCollection) Add(err error) {
 	if err != nil {
 		ec.Errors = append(ec.Errors, err)
