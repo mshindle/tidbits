@@ -6,7 +6,7 @@ WORKDIR /app
 RUN go mod download
 RUN go build -o /tmp/tidbits main.go
 
-FROM debian:bullseye-slim
+FROM debian:bookworm-slim
 
 # install the necessary build packages
 RUN apt-get update && \
