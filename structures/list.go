@@ -1,9 +1,9 @@
 package structures
 
-// snode is single linked list node
-type snode struct {
-	data interface{}
-	next *snode
+// ListNode is single linked list node
+type ListNode[T any] struct {
+	Value T
+	Next  *ListNode[T]
 }
 
 type Item struct {

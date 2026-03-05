@@ -4,8 +4,8 @@ import "sync"
 
 // Queue is a collection designed for holding elements prior to processing.
 type Queue struct {
-	head  *snode
-	tail  *snode
+	head  *ListNode[any]
+	tail  *ListNode[any]
 	count int
 	lock  *sync.Mutex
 }
@@ -31,27 +31,27 @@ func (q *Queue) Peek() interface{} {
 	if q.head == nil {
 		return nil
 	}
-	return q.head.data
+	return q.head.Value
 }
 
 // Push adds an item to the end of the queue
-func (q *Queue) Push(item interface{}) {
+func (q *Queue) Push(item any) {
 	q.lock.Lock()
 	defer q.lock.Unlock()
 
-	n := &snode{data: item}
+	n := &ListNode[any]{Value: item}
 
 	if q.tail == nil {
 		q.head = n
 	} else {
-		q.tail.next = n
+		q.tail.Next = n
 	}
 	q.tail = n
 	q.count++
 }
 
 // Poll removes an item from the head of the queue and returns it
-func (q *Queue) Poll() interface{} {
+func (q *Queue) Poll() any {
 	q.lock.Lock()
 	defer q.lock.Unlock()
 
@@ -60,12 +60,12 @@ func (q *Queue) Poll() interface{} {
 	}
 
 	n := q.head
-	q.head = n.next
+	q.head = n.Next
 	q.count--
 
 	if q.head == nil {
 		q.tail = nil
 	}
 
-	return n.data
+	return n.Value
 }
