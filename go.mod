@@ -1,10 +1,11 @@
 module gitlab.com/mshindle/tidbits
 
-go 1.25
+go 1.26
 
 require (
 	github.com/apex/log v1.9.0
 	github.com/go-redis/redis/v8 v8.11.5
+	github.com/golang-jwt/jwt/v5 v5.3.1
 	github.com/google/uuid v1.6.0
 	github.com/hashicorp/go-retryablehttp v0.7.8
 	github.com/mattn/go-sqlite3 v1.14.32
