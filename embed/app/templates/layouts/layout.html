@@ -1,0 +1,31 @@
+{{define "layout"}}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{block "title" .}}Recipe Catalog{{end}}</title>
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <script src="/js/tailwind-3.4.17.js"></script>
+</head>
+<body class="bg-gray-50">
+
+<nav class="bg-white shadow-lg mb-8">
+    <div class="max-w-6xl mx-auto px-4">
+        <div class="flex justify-between items-center h-16">
+            <div class="text-xl font-bold text-orange-600">FlavorVault</div>
+            <div class="flex space-x-8">
+                <a href="/category/drinks" class="text-gray-700 hover:text-orange-600 font-medium">Drinks</a>
+                <a href="/category/slow-cooker" class="text-gray-700 hover:text-orange-600 font-medium">Slow Cooker</a>
+                <a href="/category/bbq" class="text-gray-700 hover:text-orange-600 font-medium">BBQ</a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<main class="max-w-6xl mx-auto px-4">
+    {{block "content" .}}{{end}}
+</main>
+</body>
+</html>
+{{end}}
