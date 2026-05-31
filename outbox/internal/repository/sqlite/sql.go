@@ -1,17 +1,43 @@
-package outbox
+package sqlite
 
 import (
 	"database/sql"
-	"errors"
+	"fmt"
 
 	"github.com/apex/log"
 )
+
+type Store struct {
+	db *sql.DB
+}
+
+func NewStore(db *sql.DB) *Store {
+	return &Store{db: db}
+}
+
+func (s *Store) InitializeDB() error {
+	var err error
+
+	_, err = s.db.Exec(CreateUsersTableSQL)
+	if err != nil {
+		return fmt.Errorf("failed to create users table: %w", err)
+	}
+	log.Info("users table checked/created")
+
+	_, err = s.db.Exec(CreateOutboxEventsTableSQL)
+	if err != nil {
+		return fmt.Errorf("failed to create outbox_events table: %w", err)
+	}
+	log.Info("outbox events table checked/created")
+
+	return nil
+}
 
 // CreateUsersTableSQL contains the SQL statement to create a users table
 // that matches the User struct fields and types.
 //
 // Notes:
-//   - ID uses TEXT as a generic string type and is the PRIMARY KEY.
+//   - ID uses auto-incrementing integer as the PRIMARY KEY.
 //   - Name and Email are TEXT fields; adjust sizes/types if your DB requires it.
 //   - CreatedAt is stored as TIMESTAMP (without time zone). Change to TIMESTAMPTZ
 //     if you prefer storing timezone-aware timestamps.
@@ -20,10 +46,10 @@ import (
 // and SQLite). You may tweak data types or constraints to better match your DB.
 const CreateUsersTableSQL = `
 CREATE TABLE IF NOT EXISTS users (
-  id TEXT PRIMARY KEY,
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
   name TEXT NOT NULL,
-  email TEXT NOT NULL,
-  created_at TIMESTAMP NOT NULL
+  email TEXT NOT NULL UNIQUE,
+  created_at TIMESTAMPTZ NOT NULL
 );
 `
 
@@ -43,14 +69,8 @@ CREATE TABLE IF NOT EXISTS outbox_events (
   event_type TEXT NOT NULL,
   payload TEXT NOT NULL,
   metadata TEXT,
-  created_at TIMESTAMP NOT NULL,
-  processed_at TIMESTAMP
+  created_at TIMESTAMPTZ NOT NULL,
+  processed_at TIMESTAMPTZ
 );
 CREATE INDEX IF NOT EXISTS idx_outbox_events_processed_at ON outbox_events (processed_at) WHERE processed_at IS NULL;
 `
-
-func handleRollback(tx *sql.Tx) {
-	if rbe := tx.Rollback(); rbe != nil && !errors.Is(rbe, sql.ErrTxDone) {
-		log.WithError(rbe).Fatal("rolling back transaction failed")
-	}
-}

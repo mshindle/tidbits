@@ -4,6 +4,7 @@ import (
 	"os"
 
 	"github.com/apex/log"
+	"github.com/apex/log/handlers/cli"
 	"github.com/mitchellh/go-homedir"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -35,6 +36,7 @@ func Execute() {
 }
 
 func init() {
+	log.SetHandler(cli.New(os.Stderr))
 	log.SetLevel(log.InfoLevel)
 	cobra.OnInitialize(initConfig)
 
