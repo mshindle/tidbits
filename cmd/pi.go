@@ -5,7 +5,7 @@ Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-    http://www.apache.org/licenses/LICENSE-2.0
+	http://www.apache.org/licenses/LICENSE-2.0
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,6 +16,7 @@ limitations under the License.
 package cmd
 
 import (
+	"context"
 	"time"
 
 	"github.com/apex/log"
@@ -25,8 +26,10 @@ import (
 )
 
 var (
-	points int64
+	points     int64
 	numWorkers int
+	capacity   int
+	keepServer bool
 )
 
 // piCmd represents the pi command
@@ -50,15 +53,43 @@ Hence we can use the following formula to estimate Pi: π ~ 4 * (number of point
 
 func init() {
 	rootCmd.AddCommand(piCmd)
-	piCmd.Flags().Int64VarP(&points,"points", "p", 50000000, "number of points to use for calculation")
-	piCmd.Flags().IntVarP(&numWorkers,"workers", "w", 3, "number of workers to calculate if points are in or out of circle")
+	piCmd.Flags().Int64VarP(&points, "points", "p", 50_000_000, "number of points to use for calculation")
+	piCmd.Flags().IntVarP(&numWorkers, "workers", "w", 3, "number of workers to calculate if points are in or out of circle")
+	piCmd.Flags().IntVarP(&capacity, "capacity", "c", 2000, "sample buffer size for visualization")
+	piCmd.Flags().BoolVarP(&keepServer, "keep", "k", false, "keep webserver running after computation finishes")
 }
 
-func pi(cmd *cobra.Command, args []string) error {
-	log.WithField("points",points).WithField("numWorkers", numWorkers).Info("pi computation started")
+func pi(cmd *cobra.Command, _ []string) error {
+	log.WithField("points", points).WithField("numWorkers", numWorkers).Info("pi computation started")
 	start := time.Now()
-	p := montecarlo.NewPI(points, numWorkers)
-	err := p.Compute()
+
+	// Instantiate calculation layer with a safe, bounded tracking capacity of 2000 visible dots
+	p := montecarlo.NewPI(points, numWorkers, capacity)
+
+	// Initialize standard library web visualization server
+	v := montecarlo.NewVisualizer(p)
+	go func() {
+		if err := v.ListenAndServe(":8081"); err != nil {
+			log.WithError(err).Error("visualization server failed")
+		}
+	}()
+	// 2. Guarantee webserver cleanup when this function exits
+	defer func() {
+		log.Info("Shutting down visualization server...")
+		shutdownCtx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+		defer cancel()
+		_ = v.Shutdown(shutdownCtx)
+	}()
+
+	// Execute calculation pipeline using the system context
+	err := p.Compute(cmd.Context())
 	log.WithField("duration", time.Now().Sub(start)).Info("elapsed time")
+
+	// Optionally hold the process alive
+	if err == nil && keepServer {
+		log.Info("Computation finished. Keeping dashboard alive. Press Ctrl+C to exit.")
+		<-cmd.Context().Done() // Blocks until Cobra context gets OS interrupt
+	}
+
 	return err
 }

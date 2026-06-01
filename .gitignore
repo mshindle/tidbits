@@ -1,6 +1,8 @@
 tidbits
 .tidbits.yaml
 *.sqlite
+go.work
+go.work.sum
 
 # Compiled Object files, Static and Dynamic libs (Shared Objects)
 *.o
@@ -75,11 +77,5 @@ fabric.properties
 # Binaries for programs and plugins
 *.dll
 *.dylib
-
-# Test binary, build with `go test -c`
-
-# Output of the go coverage tool, specifically when used with LiteIDE
 *.out
-
-# Project-local glide cache, RE: https://github.com/Masterminds/glide/issues/736
 .glide/

@@ -1,11 +1,15 @@
 package montecarlo
 
 import (
+	"context"
+	"errors"
 	"math"
-	"math/rand"
+	"math/rand/v2"
 	"sync"
+	"sync/atomic"
 
 	"github.com/apex/log"
+	"github.com/mshindle/structures/ringbuffer"
 )
 
 const radius = 1.0
@@ -15,49 +19,62 @@ type point struct {
 	y float64
 }
 
-type tally struct {
-	inCircle int64
-	total    int64
+// RenderPoint represents the sampled output payload for our data visualization
+type RenderPoint struct {
+	X        float64 `json:"x"`
+	Y        float64 `json:"y"`
+	InCircle bool    `json:"in_circle"`
 }
 
 type PI struct {
-	Points      int64
-	Value       float64
-	InCircle    int64
-	TotalPoints int64
-	numWorkers  int
+	Points       int64
+	Value        float64
+	InCircle     atomic.Int64
+	TotalPoints  atomic.Int64
+	numWorkers   int
+	SampleBuffer *ringbuffer.RingBuffer[RenderPoint]
 }
 
-func NewPI(points int64, numWorkers int) *PI {
+func NewPI(points int64, numWorkers, sampleCapacity int) *PI {
 	p := &PI{
-		Points:     points,
-		numWorkers: numWorkers,
+		Points:       points,
+		numWorkers:   numWorkers,
+		SampleBuffer: ringbuffer.New[RenderPoint](sampleCapacity),
 	}
 	return p
 }
 
-func (p *PI) Compute() error {
-	tchans := make([]<-chan tally, 0, p.numWorkers)
-	pchan := generate(p.Points)
+func (p *PI) Compute(ctx context.Context) error {
+	pChan := generate(ctx, p.Points)
+
+	var wg sync.WaitGroup
 	for i := 0; i < p.numWorkers; i++ {
-		tchans = append(tchans, worker(pchan))
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
+			p.worker(ctx, pChan)
+		}()
 	}
-	results := merge(tchans...)
-	for t := range results {
-		p.InCircle += t.inCircle
-		p.TotalPoints += t.total
+	wg.Wait()
+
+	in := p.InCircle.Load()
+	total := p.TotalPoints.Load()
+	if total == 0 {
+		return errors.New("no points processed, cannot calculate PI")
 	}
-	p.Value = 4.0 * (float64(p.InCircle) / float64(p.TotalPoints))
+
+	// grab the value of PI.
+	p.Value = 4.0 * (float64(in) / float64(total))
 
 	log.WithFields(log.Fields{
-		"inCircle": p.InCircle,
-		"total":    p.TotalPoints,
+		"inCircle": in,
+		"total":    total,
 		"pi":       p.Value,
 	}).Info("pi calculated")
-	return nil
+	return ctx.Err()
 }
 
-func generate(points int64) <-chan point {
+func generate(ctx context.Context, points int64) <-chan point {
 	out := make(chan point)
 	go func(n int64) {
 		defer close(out)
@@ -66,52 +83,59 @@ func generate(points int64) <-chan point {
 				x: (rand.Float64() * 2) - 1,
 				y: (rand.Float64() * 2) - 1,
 			}
-			out <- pt
-			n--
+			select {
+			case <-ctx.Done():
+				return
+			case out <- pt:
+				n--
+			}
 		}
 	}(points)
 	return out
 }
 
-func worker(points <-chan point) <-chan tally {
-	out := make(chan tally)
+func (p *PI) worker(ctx context.Context, points <-chan point) {
+	var localTotal, localIn int64
 
-	go func() {
-		var t tally
-		defer close(out)
-		for pt := range points {
-			t.total++
+	for {
+		select {
+		case <-ctx.Done():
+			return
+		case pt, ok := <-points:
+			if !ok {
+				// Flush any remaining tallies before exiting
+				if localTotal > 0 {
+					p.TotalPoints.Add(localTotal)
+					p.InCircle.Add(localIn)
+				}
+				return
+			}
+			localTotal++
+
+			inCircle := false
 			distance := math.Sqrt(pt.x*pt.x + pt.y*pt.y)
 			if distance <= radius {
-				t.inCircle++
+				localIn++
+				inCircle = true
+			}
+
+			// Stratified Sampling: Only sample 5% of points into the visualization buffer
+			// to protect memory bandwidth while remaining statistically accurate.
+			if localTotal%50 == 0 {
+				p.SampleBuffer.OverwritePush(RenderPoint{
+					X:        pt.x,
+					Y:        pt.y,
+					InCircle: inCircle,
+				})
+			}
+
+			// Batch flush to atomics to prevent cache line contention
+			if localTotal == 1000 {
+				p.TotalPoints.Add(localTotal)
+				p.InCircle.Add(localIn)
+				localTotal = 0
+				localIn = 0
 			}
 		}
-		out <- t
-	}()
-	return out
-}
-
-// merge all the worker output into one stream
-func merge(tallies ...<-chan tally) <-chan tally {
-	var wg sync.WaitGroup
-	out := make(chan tally)
-
-	output := func(tchan <-chan tally) {
-		defer wg.Done()
-		for t := range tchan {
-			out <- t
-		}
 	}
-	wg.Add(len(tallies))
-	for _, tchan := range tallies {
-		go output(tchan)
-	}
-
-	// Start a goroutine to close out once all the output goroutines are
-	// done.  This must start after the wg.Add call.
-	go func() {
-		wg.Wait()
-		close(out)
-	}()
-	return out
 }
