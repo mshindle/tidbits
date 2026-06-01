@@ -12,6 +12,7 @@ Calculating $\pi$ using the Monte Carlo method relies on probability and geometr
 ## The Algorithm
 
 Because probability dictates that the ratio of random hits will equal the ratio of the areas, we can reverse the equation to calculate $\pi$:
+
 $$
 \pi \approx 4\times \left(\frac{\text{Number of points inside the circle}}{\text{Total number of points generated}}\right)
 $$
