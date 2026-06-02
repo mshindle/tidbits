@@ -8,7 +8,7 @@ import (
 	"time"
 
 	"github.com/apex/log"
-	"github.com/mshindle/structures/ringbuffer"
+	"github.com/mshindle/structures"
 )
 
 type Visualizer struct {
@@ -45,7 +45,7 @@ func (v *Visualizer) handleDataPoints(w http.ResponseWriter, _ *http.Request) {
 		var val RenderPoint
 		var err error
 		if val, err = v.calculator.SampleBuffer.Pop(); err != nil {
-			if !errors.Is(err, ringbuffer.ErrEmpty) {
+			if !errors.Is(err, structures.ErrEmpty) {
 				log.WithError(err).Error("failed to pop sample from buffer")
 			}
 			break

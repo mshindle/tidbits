@@ -11,7 +11,7 @@ require (
 	github.com/labstack/echo/v5 v5.1.1
 	github.com/mattn/go-sqlite3 v1.14.44
 	github.com/mitchellh/go-homedir v1.1.0
-	github.com/mshindle/structures v0.0.3
+	github.com/mshindle/structures v0.0.4
 	github.com/spf13/cobra v1.10.2
 	github.com/spf13/viper v1.21.0
 	github.com/stretchr/testify v1.11.1

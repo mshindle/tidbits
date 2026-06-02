@@ -9,7 +9,7 @@ import (
 	"sync/atomic"
 
 	"github.com/apex/log"
-	"github.com/mshindle/structures/ringbuffer"
+	"github.com/mshindle/structures"
 )
 
 const radius = 1.0
@@ -32,14 +32,14 @@ type PI struct {
 	InCircle     atomic.Int64
 	TotalPoints  atomic.Int64
 	numWorkers   int
-	SampleBuffer *ringbuffer.RingBuffer[RenderPoint]
+	SampleBuffer *structures.RingBuffer[RenderPoint]
 }
 
 func NewPI(points int64, numWorkers, sampleCapacity int) *PI {
 	p := &PI{
 		Points:       points,
 		numWorkers:   numWorkers,
-		SampleBuffer: ringbuffer.New[RenderPoint](sampleCapacity),
+		SampleBuffer: structures.NewRingBuffer[RenderPoint](sampleCapacity),
 	}
 	return p
 }
